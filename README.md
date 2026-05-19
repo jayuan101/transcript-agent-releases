@@ -45,31 +45,49 @@ docker pull sushi0934/transcript-agent:latest
 docker stop transcript-agent && docker rm transcript-agent
 ```
 
-### Sharing with other users
+### Sharing with users on the same WiFi / office network
 
-`localhost` only works on the machine running the server. Other users need your machine's **actual IP address**.
-
-**Step 1 — Find your IP (run this on the server machine):**
+`localhost` only works on the machine running the server. Others on the same network need your local IP:
 
 ```bash
-# Linux / macOS
+# Linux / macOS — run this on your machine
 hostname -I | awk '{print $1}'
 
 # Windows
 ipconfig | findstr "IPv4"
 ```
 
-Example output: `192.168.1.42`
+Send them the result, e.g. `http://192.168.1.42:7860` — they paste it into any browser.
 
-**Step 2 — Send that address to your users.** They open this URL in any browser:
+---
 
-```
-http://192.168.1.42:7860
-```
+### Sharing with anyone on the internet (home PC)
 
-Replace `192.168.1.42` with whatever your command printed.
+Your home router blocks outside traffic, so a local IP won't work for people elsewhere. Use a **tunnel** — it punches a hole through your router and gives you a public URL with no setup required.
 
-> **Same network required.** This works for people on the same WiFi or office network. If users are on the internet (different location), you'd need to expose the port through your router or use a tunnel like [ngrok](https://ngrok.com) — run `ngrok http 7860` and share the URL it gives you.
+#### Option A — ngrok (quick, link resets when you stop it)
+
+1. Sign up free at [ngrok.com](https://ngrok.com) and install the app
+2. Run:
+   ```bash
+   ngrok http 7860
+   ```
+3. ngrok prints a public URL like `https://abc123.ngrok-free.app` — share that link
+4. The link works as long as the `ngrok` command is running
+
+#### Option B — Cloudflare Tunnel (free, permanent link, no account limit)
+
+1. Install [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/)
+2. Run (no sign-in needed for a temporary link):
+   ```bash
+   cloudflared tunnel --url http://localhost:7860
+   ```
+3. Cloudflare prints a permanent-looking URL like `https://xxxx.trycloudflare.com` — share that
+4. For a fixed custom URL every time, create a free Cloudflare account and follow their [named tunnel guide](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/get-started/)
+
+Both options work on Windows, macOS, and Linux. No router changes, no firewall rules.
+
+---
 
 Multiple users are supported via the built-in request queue — new requests wait their turn rather than failing. Adjust `GRADIO_QUEUE_MAX_SIZE` and `GRADIO_DEFAULT_CONCURRENCY_LIMIT` in the `docker run` command to suit your needs.
 
