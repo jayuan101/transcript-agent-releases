@@ -45,15 +45,11 @@ docker pull sushi0934/transcript-agent:latest
 docker stop transcript-agent && docker rm transcript-agent
 ```
 
-### Sharing with other users on your network
+### Sharing with other users
 
-The server listens on all interfaces (`0.0.0.0`), so anyone on the same network can connect. Give them your machine's local IP address instead of `localhost`:
+`localhost` only works on the machine running the server. Other users need your machine's **actual IP address**.
 
-```
-http://<your-server-ip>:7860
-```
-
-Find your IP:
+**Step 1 — Find your IP (run this on the server machine):**
 
 ```bash
 # Linux / macOS
@@ -63,7 +59,19 @@ hostname -I | awk '{print $1}'
 ipconfig | findstr "IPv4"
 ```
 
-Multiple users are supported via the built-in request queue — new requests wait their turn rather than failing. The default limit is 20 queued requests with up to 5 running concurrently; adjust `GRADIO_QUEUE_MAX_SIZE` and `GRADIO_DEFAULT_CONCURRENCY_LIMIT` in the `docker run` command to suit your needs.
+Example output: `192.168.1.42`
+
+**Step 2 — Send that address to your users.** They open this URL in any browser:
+
+```
+http://192.168.1.42:7860
+```
+
+Replace `192.168.1.42` with whatever your command printed.
+
+> **Same network required.** This works for people on the same WiFi or office network. If users are on the internet (different location), you'd need to expose the port through your router or use a tunnel like [ngrok](https://ngrok.com) — run `ngrok http 7860` and share the URL it gives you.
+
+Multiple users are supported via the built-in request queue — new requests wait their turn rather than failing. Adjust `GRADIO_QUEUE_MAX_SIZE` and `GRADIO_DEFAULT_CONCURRENCY_LIMIT` in the `docker run` command to suit your needs.
 
 ---
 
