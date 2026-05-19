@@ -29,6 +29,8 @@ docker run -d \
   -v transcript-agent-outputs:/app/outputs \
   -v transcript-agent-cache:/app/.cache \
   -e GRADIO_SERVER_NAME=0.0.0.0 \
+  -e GRADIO_QUEUE_MAX_SIZE=20 \
+  -e GRADIO_DEFAULT_CONCURRENCY_LIMIT=5 \
   --restart unless-stopped \
   sushi0934/transcript-agent:latest
 ```
@@ -42,6 +44,26 @@ docker pull sushi0934/transcript-agent:latest
 # Stop
 docker stop transcript-agent && docker rm transcript-agent
 ```
+
+### Sharing with other users on your network
+
+The server listens on all interfaces (`0.0.0.0`), so anyone on the same network can connect. Give them your machine's local IP address instead of `localhost`:
+
+```
+http://<your-server-ip>:7860
+```
+
+Find your IP:
+
+```bash
+# Linux / macOS
+hostname -I | awk '{print $1}'
+
+# Windows
+ipconfig | findstr "IPv4"
+```
+
+Multiple users are supported via the built-in request queue — new requests wait their turn rather than failing. The default limit is 20 queued requests with up to 5 running concurrently; adjust `GRADIO_QUEUE_MAX_SIZE` and `GRADIO_DEFAULT_CONCURRENCY_LIMIT` in the `docker run` command to suit your needs.
 
 ---
 
