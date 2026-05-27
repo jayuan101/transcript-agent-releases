@@ -1,6 +1,6 @@
 # Transcript Agent
 
-AI-powered transcription app for interviews and meetings. Automatically identifies speakers, generates formatted reports, and exports to Word or PDF. Works fully offline — your files never leave your machine.
+AI-powered transcription and interview analysis app for meetings and interviews. Auto-identifies speakers, scores interview responses, generates formatted reports, and exports to PDF, Word, and more. Runs entirely on your machine — your files never leave your device.
 
 ---
 
@@ -10,7 +10,6 @@ AI-powered transcription app for interviews and meetings. Automatically identifi
 |----------|------|------------|
 | Windows 10/11 | `TranscriptAgent.exe` | Double-click to run |
 | macOS | `TranscriptAgent.dmg` | Open DMG → drag to Applications → double-click |
-| Linux | `TranscriptAgent-linux.AppImage` | `chmod +x TranscriptAgent-linux.AppImage` then double-click |
 
 **→ [Go to Releases](https://github.com/jayuan101/transcript-agent-releases/releases)**
 
@@ -49,25 +48,36 @@ docker stop transcript-agent && docker rm transcript-agent
 
 1. Launch the app — browser opens automatically at `http://localhost:7860`
 2. **Upload** a file or paste a file path / URL
-3. Choose your **AI provider** and paste your API key
-4. Optionally set the **number of speakers** (leave blank to auto-detect)
-5. Click **Transcribe** and watch the live progress
-6. Download your report as Word or PDF
+3. Choose your **Transcription Engine** (Whisper local or a cloud provider)
+4. Choose your **AI provider** and paste your API key
+5. Optionally set the **number of speakers** (leave blank to auto-detect)
+6. Click **Transcribe** and watch the live progress
+7. Download your report in any format
 
 ---
 
 ## Features
 
 ### Transcription
-- Powered by **OpenAI Whisper** — works on any audio or video file
+- **6 STT engines** — Whisper (local/offline), Deepgram, AssemblyAI, Groq Whisper, OpenAI Whisper API, Google Cloud STT
+- **STT timing** — shows exactly how long the transcription step took per engine
 - Auto-detects language or set it manually
-- Choose model size: `tiny` (fastest) → `large` (most accurate)
+- Choose Whisper model size: `tiny` (fastest) → `large` (most accurate)
+- **Fast startup** — app UI loads instantly; Whisper model loads in the background
 
 ### Speaker Detection
 - Enter the number of speakers, or leave blank to **auto-detect**
 - AI labels each speaker automatically
 
+### Interview Mode
+- **Question extraction** — identifies every question the interviewer asked
+- **Answer scoring** — rates each response: Great / Good / Needs Improvement / Missed
+- **Ideal answers** — shows how you could have answered each question
+- **Coaching tips** — specific, actionable feedback per question
+- **Deep mode** — deflection detection, % likelihood of advancing, prep guide for weak questions
+
 ### AI Providers — Bring Your Own Key
+
 | Provider | Notes |
 |----------|-------|
 | Claude (Anthropic) | Default |
@@ -78,7 +88,21 @@ docker stop transcript-agent && docker rm transcript-agent
 | Together AI | |
 | Perplexity | |
 | Ollama (Local) | No API key — fully offline |
-| **Custom (OpenAI-compatible)** | LM Studio, vLLM, Azure, any compatible endpoint |
+| Custom (OpenAI-compatible) | LM Studio, vLLM, Azure, any compatible endpoint |
+
+### Downloads
+
+Every job produces all of these:
+
+| Format | Description |
+|--------|-------------|
+| `.pdf` | Formatted PDF report |
+| `.docx` | Word document |
+| `.md` | Markdown report |
+| `.txt` | Plain text transcript |
+| `.json` | Structured data |
+| `.srt` | Subtitles for video players |
+| `.vtt` | WebVTT subtitles |
 
 ### Auto-Update
 - App checks for updates in the background on every launch
@@ -93,14 +117,14 @@ docker stop transcript-agent && docker rm transcript-agent
 ### Sleep Prevention
 - Keeps your machine awake during transcription
 - Restores normal sleep when done
-- Works on Windows, macOS, and Linux
 
 ---
 
 ## Supported Formats
 
 **Audio:** `.mp3` `.wav` `.m4a` `.ogg` `.flac` `.aac` `.wma`  
-**Video:** `.mp4` `.mkv` `.webm` `.mov` `.avi` `.m4v`
+**Video:** `.mp4` `.mkv` `.webm` `.mov` `.avi` `.m4v`  
+**Documents:** `.pdf` `.docx` `.txt` `.md` `.srt` `.vtt`
 
 ---
 
@@ -110,4 +134,4 @@ docker stop transcript-agent && docker rm transcript-agent
 |--|---------|-------------|
 | RAM | 8 GB | 16 GB |
 | Disk | 5 GB free | 10 GB free |
-| OS | Windows 10, macOS 12, Ubuntu 20.04 | Latest |
+| OS | Windows 10, macOS 12 | Latest |
