@@ -142,6 +142,7 @@ Every job produces all of these:
 
 | Version | What changed |
 |---------|-------------|
+| `v3.27` | Analyze button is indigo in dark mode (was colorless gray) |
 | `v3.26` | % likelihood of advancing now shown in standard Interview Mode (not deep-only) |
 | `v3.25` | Fix History tab Load button — job ID now correctly passed when clicking Load |
 | `v3.24` | Reliable update checker + manual Check for Updates button |
