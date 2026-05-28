@@ -59,7 +59,7 @@ docker stop transcript-agent && docker rm transcript-agent
 ## Features
 
 ### Transcription
-- **6 STT engines** — Whisper (local/offline), Deepgram, AssemblyAI, Groq Whisper, OpenAI Whisper API, Google Cloud STT
+- **9 STT engines** — Whisper (local/offline), Deepgram, AssemblyAI, Groq Whisper, OpenAI Whisper API, Google Cloud STT, Azure Speech, ElevenLabs Scribe, Rev.ai
 - **STT timing** — shows exactly how long the transcription step took per engine
 - Auto-detects language or set it manually
 - Choose Whisper model size: `tiny` (fastest) → `large` (most accurate)
