@@ -135,3 +135,20 @@ Every job produces all of these:
 | RAM | 8 GB | 16 GB |
 | Disk | 5 GB free | 10 GB free |
 | OS | Windows 10, macOS 12 | Latest |
+
+---
+
+## Release History
+
+| Version | What changed |
+|---------|-------------|
+| `v3.25` | Fix History tab Load button — job ID now correctly passed when clicking Load |
+| `v3.24` | Reliable update checker + manual Check for Updates button |
+| `v3.23` | Grouped step tracker (3 phase boxes), History Load fix |
+| `v3.22` | History tab Load fix — eliminated setTimeout race condition |
+| `v3.21` | Floating Analyze button, neutral slate colors, 5-step tracker |
+| `v3.20` | Remove 50%+ placeholder from AI stage, show elapsed time |
+| `v3.19` | Per-stage timing display, Transcript tab default, dark mode error fix |
+| `v3.18` | Timezone dropdown scrollable IANA list |
+| `v3.17` | 9 STT engines (+ Azure Speech), auto-chunking for long recordings |
+| `v3.16` | 8 STT engines (+ ElevenLabs, Rev.ai), engine dropdown, auto-fill key |
