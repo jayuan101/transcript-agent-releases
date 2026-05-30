@@ -1,0 +1,56 @@
+name: Build Windows EXE
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to attach EXE to (e.g. v3.48)'
+        required: true
+        default: 'v3.48'
+
+jobs:
+  build-exe:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Clone source from Hugging Face Space
+        run: git clone https://huggingface.co/spaces/Coastline6/transcript-agent source
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5.6.0
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        working-directory: source
+        run: |
+          pip install --upgrade pip
+          pip install pyinstaller
+          pip install `
+            gradio fastapi "uvicorn[standard]" python-multipart `
+            anthropic openai groq `
+            python-docx pdfplumber fpdf2 requests `
+            imageio-ffmpeg exceptiongroup `
+            pillow orjson anyio sniffio httpx numpy
+
+      - name: Build with PyInstaller
+        working-directory: source
+        run: pyinstaller TranscriptAgent.spec --clean --noconfirm
+
+      - name: Zip the build
+        working-directory: source
+        run: Compress-Archive -Path dist\TranscriptAgent -DestinationPath TranscriptAgent-Windows.zip
+
+      - name: Upload to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+        run: |
+          gh release upload "$env:RELEASE_TAG" `
+            source\TranscriptAgent-Windows.zip `
+            --repo jayuan101/transcript-agent-releases `
+            --clobber
