@@ -11,6 +11,8 @@ on:
 jobs:
   build-dmg:
     runs-on: macos-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Clone source from Hugging Face Space
