@@ -1,0 +1,56 @@
+name: Build Mac DMG
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to attach DMG to (e.g. v3.48)'
+        required: true
+        default: 'v3.48'
+
+jobs:
+  build-dmg:
+    runs-on: macos-latest
+
+    steps:
+      - name: Clone source from Hugging Face Space
+        run: git clone https://huggingface.co/spaces/Coastline6/transcript-agent source
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        working-directory: source
+        run: |
+          pip install --upgrade pip
+          pip install pyinstaller
+          pip install \
+            gradio fastapi "uvicorn[standard]" python-multipart \
+            anthropic openai groq \
+            python-docx pdfplumber fpdf2 requests \
+            imageio-ffmpeg exceptiongroup \
+            pillow orjson anyio sniffio httpx
+
+      - name: Build .app bundle with PyInstaller
+        working-directory: source
+        run: pyinstaller TranscriptAgent.spec --clean --noconfirm
+
+      - name: Package .app into DMG
+        working-directory: source
+        run: |
+          hdiutil create \
+            -volname "Transcript Agent" \
+            -srcfolder dist/TranscriptAgent.app \
+            -ov -format UDZO \
+            TranscriptAgent.dmg
+
+      - name: Upload DMG to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload ${{ inputs.release_tag }} \
+            source/TranscriptAgent.dmg \
+            --repo jayuan101/transcript-agent-releases \
+            --clobber
